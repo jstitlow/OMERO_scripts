@@ -12,6 +12,7 @@ dataset_id = 16977
 HOST="omero1.bioch.ox.ac.uk"
 conn = BlitzGateway(USER, PASS, host=HOST, port=4064)
 conn.connect()
+conn.SERVICE_OPTS.setOmeroGroup(-1)
 # conn.getSession().setTimeToIdle(rlong(60*60*1000))
 
 for image in conn.getObject("Dataset", dataset_id).listChildren():
