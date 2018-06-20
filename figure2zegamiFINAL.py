@@ -31,10 +31,13 @@ import time
 import re
 from Figure_To_Pdf import FigureExport
 
-# Connect to OMERO
-PASS = getpass.getpass("Enter Password:") 
 
-conn = BlitzGateway('bioc1301', PASS, host='omero1.bioch.ox.ac.uk', port=4064)
+# Connect to OMERO
+USER = os.environ['USER']
+PASS = getpass.getpass("Enter Password:")
+HOST = os.environ['HOST']
+
+conn = BlitzGateway(USER, PASS, host=HOST, port=4064)
 conn.connect()
 
 # Keep connection to OMERO alive
