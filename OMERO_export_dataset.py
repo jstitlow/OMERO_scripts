@@ -2,10 +2,21 @@ import omero
 from omero.gateway import BlitzGateway
 import os
 import getpass
+import threading
 
 USER = os.environ['USER']
 PASS = getpass.getpass("Enter Password:")
 HOST = os.environ['HOST']
+
+# keep connection to OMERO alive
+def keep_connection_alive():
+    while True:
+        conn.keepAlive()
+        time.sleep(60)
+
+th_ka = threading.Thread(target = keep_connection_alive)
+th_ka.daemon = True
+th_ka.start()
 
 dataset_id = 16977
 
@@ -13,7 +24,6 @@ HOST="omero1.bioch.ox.ac.uk"
 conn = BlitzGateway(USER, PASS, host=HOST, port=4064)
 conn.connect()
 conn.SERVICE_OPTS.setOmeroGroup(-1)
-# conn.getSession().setTimeToIdle(rlong(60*60*1000))
 
 for image in conn.getObject("Dataset", dataset_id).listChildren():
 
