@@ -1,8 +1,7 @@
 # -------------figure2zegami-------------
 #
 # Created by: Steve Taylor
-# with input from Will Moore, David Pinto, Mary Thompson, Darragh Ennis, and Ilan Davis
-# Revised by : Josh Titlow, 18 May 2018
+# with input from Will Moore, David Pinto, Mary Thompson, Darragh Ennis, Josh Titlow, and Ilan Davis
 # 
 # Generates .png files from a collection of OMERO.Figures
 # 
