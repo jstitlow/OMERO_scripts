@@ -2,6 +2,8 @@
 #
 # Created by: Steve Taylor
 # with input from Will Moore, David Pinto, Mary Thompson, Darragh Ennis, Josh Titlow, and Ilan Davis
+#
+# Revised: 12 October 2018
 # 
 # Generates .png files from a collection of OMERO.Figures
 # 
