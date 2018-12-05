@@ -20,10 +20,10 @@
 # ToDo
 # - add output directory option
 
+import omero
 from omero.rtypes import wrap
 from omero.gateway import BlitzGateway
 import getpass
-import omero
 import os
 import csv
 import sys
@@ -53,7 +53,7 @@ def connect_to_omero(userid, host, port):
     th_ka.start()
 
     # Cross-group query to find file
-    conn.SERVICE_OPTS.setOmeroGroup(-1)
+    # conn.SERVICE_OPTS.setOmeroGroup(-1)
 
 def download_figures(tags, antitags, webclient_uri):
     '''Create tab-separated file for Zegami collection'''
@@ -78,12 +78,12 @@ def download_figures(tags, antitags, webclient_uri):
             print('generating image for figure %d' % id)
 
             # Build .pdf of the Figure from the json file
-            json = "".join(ann.getFileInChunks())
-            script_params = {'Figure_JSON' : json, 'Webclient_URI': webclient_uri, 'Export_Option' : 'PDF'}
+            #json = "".join(ann.getFileInChunks())
+            #script_params = {'Figure_JSON' : json, 'Webclient_URI': webclient_uri, 'Export_Option' : 'PDF'}
             ## redundant, see https://github.com/ome/omero-figure/issues/290
 
-            fig_export = FigureExport(conn, script_params, export_images=False)
-            fig_export.build_figure()
+            #fig_export = FigureExport(conn, script_params, export_images=False)
+            #fig_export.build_figure()
 
             # Pass filename parameters to .tsv file
             file_name = figure_name + "." + format
