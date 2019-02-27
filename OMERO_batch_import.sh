@@ -16,5 +16,5 @@ for i in $1; do
 # OMERO CLI command for importing files to a named dataset
         # Creates new dataset if one doesn't already exist
         /opt/OMERO.server-5.4.5-ice35-b83/bin/omero import ${i} -T Dataset:+name:$2\
-        --group 'davisgroup'
+        --group 'AdultBrain smFISH'
 done
