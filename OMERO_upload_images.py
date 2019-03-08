@@ -1,42 +1,32 @@
+##########################################################################
+# Upload images to OMERO and get imageId
+#
+# ---login with omero login---
+# ---get session key with omero sessions list---
+#
+# TODO:
+#
+# -iterate over a folder
+# -get session automatically
+# -store IDs in a dictionary or spreadsheet and link them to old imageIds
+#   and json file
+###########################################################################
+
 import omero
-from omero.gateway import BlitzGateway
-import os
-import getpass
-import threading
-import time
 import subprocess
 
-USER = os.environ['USER']
-PASS = getpass.getpass("Enter Password:")
-HOST = os.environ['HOST']
+filename = ('/usr/people/bioc1301/src/OMERO_scripts/test.oir')
+hostname = ('omero1.bioch.ox.ac.uk:4064')
+username = ('bioc1301')
+key = ('0c5a03f6-06e7-4da4-9842-502a17d36ab9')
 
-dataset_id = 16822
-#filename = '/usr/people/bioc1301/src/OMERO_scripts/test/2017nov29_001473(cpx)_control_60x_OL_DAPI_syp_DLG_YFP.oir'
-HOST='omero1.bioch.ox.ac.uk'
-conn = BlitzGateway(USER, PASS, host=HOST, port=4064)
-conn.connect()
-conn.SERVICE_OPTS.setOmeroGroup(-1)
-#key = ('fb1e31ae-00ec-4860-aa8b-2847c17ed916')
-#server = ('omero1.bioch.ox.ac.uk:4064')
+def import_to_omero(filename,hostname,username,key):
 
-def import_to_omero():
-    #importing into OMERO
-    #print filename, hostname, username, key
-    #try:
-    #    with open(filename, "r") as fh:
-    #        print fh
-    #except:
-    #    print'File opening failed'
-    import_command = '/opt/OMERO.py-5.4.8-ice36-b99/bin/omero import /usr/people/bioc1301/src/OMERO_scripts/test.oir -s omero1.bioch.ox.ac.uk:4064 -u bioc1301 -k 8639224d-bedd-4bca-9663-a5dd7b6dd721'
+    import_command = "/opt/OMERO.py-5.4.8-ice36-b99/bin/omero import "+filename+" -s "+hostname+" -u "+username+" -k "+ key
     popen = subprocess.Popen(import_command, shell=True, stdout=subprocess.PIPE)
     out, err = popen.communicate()
 
-    #if popen.returncode is not 0:
-    #print('Failed to import'+filename)
-    #else:
-        #we are only interested in the omero ID
     omeroID = out.split(':')[1]
     print omeroID
-    conn.close()
 
-import_to_omero()
+import_to_omero(filename,hostname,username,key)
