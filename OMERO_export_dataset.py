@@ -28,13 +28,13 @@ th_ka.start()
 
 for image in conn.getObject("Dataset", dataset_id).listChildren():
 
-  for orig_file in image.getImportedImageFiles():
+    for orig_file in image.getImportedImageFiles():
 
-    file_name = orig_file.getName()
-    print "Downloading...", file_name
+        file_name = orig_file.getName()
+        print "Downloading...", file_name
 
     with open(file_name, "wb") as f:
-      for chunk in orig_file.getFileInChunks(buf=2621440):
-        f.write(chunk)
+        for chunk in orig_file.getFileInChunks(buf=2621440):
+            f.write(chunk)
 
 conn.close()

@@ -19,84 +19,55 @@ import time
 import pandas as pd
 import json
 
-USER = os.environ['USER']
 PASS = getpass.getpass("Enter Password:")
-
-HOST="omero1.bioch.ox.ac.uk"
-conn = BlitzGateway(USER, PASS, host=HOST, port=4064)
+conn = BlitzGateway('bioc1301', PASS, host='omero1.bioch.ox.ac.uk', port=4064, group='davisgroup')
 conn.connect()
 conn.SERVICE_OPTS.setOmeroGroup(-1)
-
-# keep connection to OMERO alive
-def keep_connection_alive():
-    while True:
-        conn.keepAlive()
-        time.sleep(60)
-
-th_ka = threading.Thread(target = keep_connection_alive)
-th_ka.daemon = True
-th_ka.start()
-
 
 # Get images
 #fig_IDs = pd.read_csv('fig_IDs.csv')
 #project_ID = 5868
 
 # get json files
-indir = '/usr/people/bioc1301/src/OMERO_scripts/test/'
-json_files = [indir+file for file in os.listdir(indir) if file.endswith('.json')]
+#indir = '/usr/people/bioc1301/src/OMERO_scripts/test/'
+#json_files = [indir+file for file in os.listdir(indir) if file.endswith('.json')]
 
+#json_files = [indir+file for file in os.listdir(indir) if file.endswith('.json')]
+figure_IDs = pd.read_csv('/usr/people/bioc1301/src/Zegami_scripts/Zegami_collection_27_Feb_2019/figures/NMJ_imageID_json.csv')
+figure_IDs = figure_IDs['old_imageIds']
+#figure_IDs = open(figure_IDs).read().splitlines()
 
-image_list = []
-broken_figures = []
+def export_original_file():
+    for ID in figure_IDs:
+        image = conn.getObject('Image', ID)
+        print image
+        for orig_file in image.getImportedImageFiles():
+            file_name = orig_file.getName()
+            print "Downloading...", file_name
+            with open(file_name, "wb") as f:
+                for chunk in orig_file.getFileInChunks(buf=2621440):
+                    f.write(chunk)
 
-for figure in json_files:
-    #print 'Retrieving images from figure:', figure
-    with open(figure) as datafile:
-        data = json.load(datafile)
-        try:
-            for i in data['panels']:
-                image_list.append(i['imageId'])
-        except:
-            broken_figures.append(figure)
-            pass
+                    
+import omero
+import subprocess
 
-for ID in set(image_list):
+filename = ('/usr/people/bioc1301/src/OMERO_scripts/test.oir')
+hostname = ('omero1.bioch.ox.ac.uk:4064')
+username = ('bioc1301')
+key = ('0c5a03f6-06e7-4da4-9842-502a17d36ab9')
 
-    image = conn.getObject('Image', ID)
-    print image
-    for f in image.getImportedImageFiles():
-        filename = f.getName()
-        t = open(f.getName(), 'wb')
-        try:
-            for chunk in f.getFileInChunks():
-                t.write(chunk)
-        finally:
-            t.close()
-    #print image
+def export_ometiff(figureIDs,hostname,username,key):
+    for ID in figure_IDs:
+        export_command = "/opt/OMERO.py-5.4.8-ice36-b99/bin/omero import --file "+filename+" -s "+hostname+" -u "+username+" -k "+ key
+        popen = subprocess.Popen(import_command, shell=True, stdout=subprocess.PIPE)
+        out, err = popen.communicate()
 
-    #with open(image, "wb") as f:
-    #    for chunk in image.getFileInChunks(buf=2621440):
-    #        f.write(chunk)
+        omeroID = out.split(':')[1]
+        print omeroID
 
-
-filename = None
-
-
-#for ID in fig_IDs['fig_ID']:
-#    image = conn.getObject("Image", ID)
-#    print image
-
-#for image in conn.getObject("Project", project_ID).listChildren():
-
-#    for orig_file in image.getImportedImageFiles():
-
-#        for ID in fig_IDs['fig_ID']:
-#            file_name = orig_file.getName()
-#            print "Downloading...", file_name
-
-            #with open(file_name, "wb") as f:
-            #  for chunk in orig_file.getFileInChunks(buf=2621440):
-            #    f.write(chunk)
+export_ometiff(figureIDs,hostname,username,key)
 
 conn.close()
+
+# bin/omero export --file image.tif Image:<id>

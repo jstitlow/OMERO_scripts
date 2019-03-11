@@ -4,3 +4,6 @@
 *.oir
 *.json
 *.tiff
+*.hgsb
+*.r3d
+*.log
