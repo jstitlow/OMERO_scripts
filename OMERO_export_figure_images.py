@@ -66,7 +66,7 @@ def export_ometiff(figureIDs,hostname,username,key):
         omeroID = out.split(':')[1]
         print omeroID
 
-export_ometiff(figureIDs,hostname,username,key)
+#export_ometiff(figureIDs,hostname,username,key)
 
 conn.close()
 
