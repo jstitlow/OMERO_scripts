@@ -5,11 +5,13 @@ import getpass
 import threading
 import time
 
+# specify a dataset
+dataset_id = 16822
+
+# initialise OMERO
 USER = os.environ['USER']
 PASS = getpass.getpass("Enter Password:")
 HOST = os.environ['HOST']
-
-dataset_id = 16822
 
 HOST="omero1.bioch.ox.ac.uk"
 conn = BlitzGateway(USER, PASS, host=HOST, port=4064)
