@@ -22,16 +22,18 @@ import json
 import omero_tools
 from Figure_To_Pdf import TiffExport
 
-
+# setup OMERO connection
 PASS = getpass.getpass("Enter Password:")
 conn = BlitzGateway('bioc1301', PASS, host='omero1.bioch.ox.ac.uk', port=4064, group='davisgroup')
 conn.connect()
 conn.SERVICE_OPTS.setOmeroGroup(-1)
 
+# specify a list of figureIDs and outdir
 figure_IDs = '/usr/people/bioc1301/src/OMERO_scripts/OMERO_Figure_screen_dataset/NMJ_figureIDs.csv'
 figure_IDs = open(figure_IDs).read().splitlines()
 outdir = '/usr/people/bioc1301/src/OMERO_scripts/OMERO_Figure_screen_dataset/json/'
 
+# download OMEROfigure json files
 for fig_ID in figure_IDs:
     try: 
         fig = conn.getObject('FileAnnotation', fig_ID)
@@ -41,7 +43,6 @@ for fig_ID in figure_IDs:
             fig_json = json.loads("".join(fig.getFileInChunks()))
         except:
             pass
-
         else:
             with open(os.path.join(outdir, fig_ID+'.json'), 'w') as fh:
                 json.dump(fig_json, fh)
@@ -53,7 +54,8 @@ for fig_ID in figure_IDs:
     json_path = os.path.join(outdir, fig_ID+'.json')
     with open(json_path, 'r') as fh:
         fig_text = fh.read()
-
+    
+    # build jpg file
     fig_json = json.loads(fig_text)
     if int(fig_json['page_count']) > 1:
         raise RuntimeError("more than one page for figure id '%d'" % fig_id)
