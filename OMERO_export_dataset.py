@@ -9,11 +9,10 @@ import time
 dataset_id = 16822
 
 # initialise OMERO
-USER = os.environ['USER']
+USER = getpass.getpass("Enter username:")
 PASS = getpass.getpass("Enter Password:")
-HOST = os.environ['HOST']
-
 HOST="omero1.bioch.ox.ac.uk"
+
 conn = BlitzGateway(USER, PASS, host=HOST, port=4064)
 conn.connect()
 conn.SERVICE_OPTS.setOmeroGroup(-1)
