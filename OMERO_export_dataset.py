@@ -8,7 +8,7 @@ import time
 
 # initialise OMERO
 USER = getpass.getuser()
-print 'username: ', USER
+print ('username: ', USER)
 PASS = getpass.getpass('Enter password:')
 HOST='omero1.bioch.ox.ac.uk'
 
@@ -16,8 +16,9 @@ conn = BlitzGateway(USER, PASS, host=HOST, port=4064)
 conn.connect()
 conn.SERVICE_OPTS.setOmeroGroup(-1)
 
-print 'login successful'
+print ('login successful')
 dataset_id = input ('Enter dataset ID:')
+
 # keep connection to OMERO alive
 def keep_connection_alive():
     while True:
