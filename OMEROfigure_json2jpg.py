@@ -21,6 +21,7 @@ import pandas as pd
 import json
 import omero_tools
 from Figure_To_Pdf import TiffExport
+import pandas as pd
 
 # setup OMERO connection
 PASS = getpass.getpass("Enter Password:")
@@ -29,9 +30,13 @@ conn.connect()
 conn.SERVICE_OPTS.setOmeroGroup(-1)
 
 # specify a list of figureIDs and outdir
-figure_IDs = '/usr/people/bioc1301/src/OMERO_scripts/OMERO_Figure_screen_dataset/NMJ_figureIDs.csv'
+figure_IDs = '/usr/people/bioc1301/src/OMERO_scripts/fig_IDs.csv'
 figure_IDs = open(figure_IDs).read().splitlines()
 outdir = '/usr/people/bioc1301/src/OMERO_scripts/OMERO_Figure_screen_dataset/json/'
+
+# instantiate lists to log results
+file = []
+build = []
 
 # download OMEROfigure json files
 for fig_ID in figure_IDs:
@@ -75,8 +80,14 @@ for fig_ID in figure_IDs:
     try:
         fig_export.build_figure()
         print ('building:', fig_ID+'.jpg')
-        
+        file.append(fig_ID)
+        build.append('yes')        
     except:
+        file.append(fig_ID)
+        build.append('no')
         print("failed to build figure",fig_ID+'.jpg')
-            
+
+df = pd.DataFrame({'file':file, 'build':build})
+df = df[['file', 'build']]
+df.to_csv(os.path.join('logfile.csv'), index=True)            
 conn.close

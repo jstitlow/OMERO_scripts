@@ -6,6 +6,18 @@ import threading
 import time
 
 
+def print_obj(obj, indent=0):
+    """
+    Helper method to display info about OMERO objects.
+    Not all objects will have a "name" or owner field.
+    """
+    print """%s%s:%s  Name:"%s" (owner=%s)""" % (
+        " " * indent,
+        obj.OMERO_CLASS,
+        obj.getId(),
+        obj.getName(),
+        obj.getOwnerOmeName())
+
 # initialise OMERO
 USER = getpass.getuser()
 print ('username: ', USER)
@@ -31,13 +43,14 @@ th_ka.start()
 
 for image in conn.getObject('Dataset', dataset_id).listChildren():
 
-    for orig_file in image.getImportedImageFiles():
+    print_obj(image, 4)
+#    for orig_file in image.getImportedImageFiles():
 
-        file_name = orig_file.getName()
-        print ('Downloading...', file_name)
+#        file_name = orig_file.getName()
+#        print ('Downloading...', file_name)
 
-    with open(file_name, 'wb') as f:
-        for chunk in orig_file.getFileInChunks(buf=2621440):
-            f.write(chunk)
+#    with open(file_name, 'wb') as f:
+#        for chunk in orig_file.getFileInChunks(buf=2621440):
+#            f.write(chunk)
 
 conn.close()

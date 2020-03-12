@@ -2,6 +2,8 @@
 
 # Creates a new OMERO dataset and imports all files within a specified directory.
 # The OMERO environment is already setup on mprocessor1.
+# --USAGE--
+# > bash ~/src/OMERO_scripts/OMERO_batch_import.sh "path/to/directory/*.tif" OMERO_folder_name
 # Pass directory path as 1st argument (e.g.,"~/path/*.tiff" including quotes)
 # Pass dataset name as 2nd argument
 # Should prompt login to give OMERO credentials.
